@@ -83,7 +83,7 @@ cfg_if::cfg_if! {
     } else if #[cfg(target_os = "xous")] {
         #[path = "xous.rs"]
         mod sys;
-    } else if #[cfg(any(target_os = "linux", target_os = "macos"))] {
+    } else if #[cfg(any(target_os = "linux", target_os = "android", target_os = "macos"))] {
         #[path = "unix.rs"]
         mod sys;
     } else {
