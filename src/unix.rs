@@ -34,7 +34,7 @@ unsafe impl Allocator for System {
         }
     }
 
-    #[cfg(target_os = "linux")]
+    #[cfg(any(target_os = "linux", target_os = "android"))]
     fn remap(&self, ptr: *mut u8, oldsize: usize, newsize: usize, can_move: bool) -> *mut u8 {
         let flags = if can_move { libc::MREMAP_MAYMOVE } else { 0 };
         let ptr = unsafe { libc::mremap(ptr.cast(), oldsize, newsize, flags) };
@@ -50,7 +50,7 @@ unsafe impl Allocator for System {
         ptr::null_mut()
     }
 
-    #[cfg(target_os = "linux")]
+    #[cfg(any(target_os = "linux", target_os = "android"))]
     fn free_part(&self, ptr: *mut u8, oldsize: usize, newsize: usize) -> bool {
         unsafe {
             let rc = libc::mremap(ptr.cast(), oldsize, newsize, 0);
