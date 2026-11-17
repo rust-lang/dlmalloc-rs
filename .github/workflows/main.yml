@@ -31,7 +31,9 @@ jobs:
     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       with:
         persist-credentials: false
-    - run: rustup update ${{ matrix.rust }} --no-self-update && rustup default ${{ matrix.rust }}
+    - run: rustup update ${MATRIX_RUST} --no-self-update && rustup default ${MATRIX_RUST}
+      env:
+        MATRIX_RUST: ${{ matrix.rust }}
       shell: bash
 
     # Configure cross-builds by adding the rustup target and configuring future
