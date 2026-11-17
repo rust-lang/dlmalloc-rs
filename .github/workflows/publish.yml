@@ -6,6 +6,8 @@ on:
     tags:
       - "*"
 
+permissions: {}
+
 jobs:
   publish:
     runs-on: ubuntu-latest
