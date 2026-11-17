@@ -25,6 +25,8 @@ jobs:
             rust: stable
             target: i686-unknown-linux-gnu
             gcc_target: i686-linux-gnu
+    env:
+      MATRIX_TARGET: ${{ matrix.target }}
     steps:
     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       with:
@@ -35,8 +37,9 @@ jobs:
     # Configure cross-builds by adding the rustup target and configuring future
     # cargo invocations.
     - run: |
-        rustup target add ${{ matrix.target }}
-        echo CARGO_BUILD_TARGET=${{ matrix.target }} >> $GITHUB_ENV
+        rustup target add ${MATRIX_TARGET}
+        echo CARGO_BUILD_TARGET=${MATRIX_TARGET} >> $GITHUB_ENV
+      shell: bash
       if: matrix.target != ''
 
     # For wasm install wasmtime as a test runner and configure it with Cargo.
@@ -53,8 +56,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y gcc-${{ matrix.gcc_target }}
 
-        upcase=$(echo ${{ matrix.target }} | awk '{ print toupper($0) }' | sed 's/-/_/g')
+        upcase=$(echo ${MATRIX_TARGET} | awk '{ print toupper($0) }' | sed 's/-/_/g')
         echo CARGO_TARGET_${upcase}_LINKER=${{ matrix.gcc_target }}-gcc >> $GITHUB_ENV
+      shell: bash
       if: matrix.gcc_target != ''
 
     - run: cargo test
